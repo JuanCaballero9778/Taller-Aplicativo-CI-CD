@@ -14,6 +14,9 @@ import eci.edu.dosw.dtos.RecipeDTO;
 import eci.edu.dosw.enums.TypeChef;
 import eci.edu.dosw.service.RecipeService;
 
+/**
+ * Clase controlador para  el CRUD de las recetas y sus funcionalidades.
+ */
 @RestController
 @RequestMapping("/recipes")
 @RequiredArgsConstructor
@@ -53,6 +56,12 @@ public class RecipeController {
     public RecipeDTO getById(@Parameter(description = "ID de la receta a buscar") @PathVariable String id) {
         return recipeService.getById(id);
     }
+    
+    @Operation(summary = "Obtener recetas por tipo de chef")
+    @GetMapping("/type/{typeChef}")
+    public List<RecipeDTO> getByType(@Parameter(description = "Tipo de chef: VIEWER, CONTESTAND o CHEF") @PathVariable TypeChef typeChef) {
+        return recipeService.getByTypeOfChef(typeChef);
+    }
 
     @Operation(summary = "Actualizar receta")
     @PutMapping("/{id}")
@@ -67,15 +76,43 @@ public class RecipeController {
         recipeService.deleteRecipe(id);
     }
 
-    @Operation(summary = "Obtener recetas por tipo de chef")
-    @GetMapping("/type/{type}")
-    public List<RecipeDTO> getByType(@Parameter(description = "Tipo de chef: VIEWER, PARTICIPANT o CHEF") @PathVariable("type") String type) {
-        TypeChef typeChef;
-        try {
-            typeChef = TypeChef.valueOf(type.toUpperCase());
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Tipo de chef inválido. Valores válidos: " + java.util.Arrays.toString(TypeChef.values()));
+    @Operation(summary = "Actualizar un campo de la receta")
+    @PatchMapping("/{id}")
+    public RecipeDTO updateRecipeField(@Parameter(description = "ID de la receta a actualizar") @PathVariable String id, 
+            @Parameter(description = "Campo a actualizar: name, title, description, typeOfChef, season") @RequestParam String field,
+            @Parameter(description = "Valor del campo a actualizar") @RequestParam String value) {
+
+        RecipeDTO recipe = recipeService.getById(id);
+
+        switch (field.toLowerCase()) {
+            case "name":
+                recipe.setName(value);
+                break;
+            case "title":
+                recipe.setTitle(value);
+                break;
+            case "description":
+                recipe.setDescription(value);
+                break;
+            case "typeofchef":
+                try {
+                    recipe.setTypeOfChef(TypeChef.valueOf(value.toUpperCase()));
+                } catch (IllegalArgumentException ex) {
+                    throw new IllegalArgumentException("Valor inválido para typeOfChef. Valores válidos: " 
+                            + java.util.Arrays.toString(TypeChef.values()));
+                }
+                break;
+            case "season":
+                try {
+                    recipe.setSeason(Integer.parseInt(value));
+                } catch (NumberFormatException ex) {
+                    throw new IllegalArgumentException("Valor inválido para season. Debe ser un número.");
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Campo inválido. Los campos válidos son: name, title, description, typeOfChef, season");
         }
-        return recipeService.getByTypeOfChef(typeChef);
+
+        return recipeService.updateRecipe(id, recipe);
     }
 }

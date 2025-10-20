@@ -13,7 +13,7 @@
     </parent>
 
     <groupId>eci.edu.dosw</groupId>
-    <artifactId>Taller-Aplicativo-CI-CD</artifactId>
+    <artifactId>Taller_Aplicativo_CI_CD</artifactId>
     <version>0.0.5</version>
     <name>Taller-Aplicativo-CI-CD</name>
     <description>Demo project for Spring Boot</description>
@@ -37,7 +37,7 @@
             **/configs/**,
             **/security/**,
             **/util/**,
-            **/Taller-Aplicativo-CI-CD/**,
+            **/Taller_Aplicativo_CI_CD/**,
             **/ClassApplication.class
         </sonar.coverage.exclusions>
 
@@ -51,7 +51,7 @@
             **/configs/**,
             **/security/**,
             **/util/**,
-            **/Taller-Aplicativo-CI-CD/**,
+            **/Taller_Aplicativo_CI_CD/**,
             **/ClassApplication.class
         </jacoco.exclusions.pattern>
     </properties>
