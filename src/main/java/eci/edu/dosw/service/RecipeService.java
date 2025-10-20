@@ -21,4 +21,6 @@ public interface RecipeService {
     void deleteRecipe(String id);
     RecipeDTO updateRecipe(String id, RecipeDTO recipeDTO);
     List<RecipeDTO> getByTypeOfChef(TypeChef typeChef);
+    List<RecipeDTO> searchRecipesByName(String name);
+    List<RecipeDTO> getRecipesBySeason(int season);
 }

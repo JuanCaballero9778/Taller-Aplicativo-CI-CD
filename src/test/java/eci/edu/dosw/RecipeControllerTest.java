@@ -121,6 +121,16 @@ class RecipeControllerTest {
     }
 
     @Test
+    void testShouldSearchRecipesByName() {
+        when(recipeService.searchRecipesByName("Pasta")).thenReturn(Arrays.asList(chefRecipe));
+
+        List<RecipeDTO> result = recipeController.searchRecipesByName("Pasta");
+
+        assertEquals(1, result.size());
+        assertEquals("Pasta Boloñesa", result.get(0).getName());
+    }
+
+    @Test
     void testShoudlUpdateRecipeDescription() {
         when(recipeService.getById("1")).thenReturn(viewerRecipe);
         when(recipeService.updateRecipe(eq("1"), any())).thenReturn(viewerRecipe);

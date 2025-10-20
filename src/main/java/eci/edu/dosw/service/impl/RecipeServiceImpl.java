@@ -63,6 +63,29 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<RecipeDTO> searchRecipesByName(String name) {
+        return recipeRepository.findAll().stream()
+                .filter(r -> r.getName().toLowerCase().contains(name.toLowerCase()))
+                .map(recipeMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<RecipeDTO> getRecipesBySeason(int season) {
+        return recipeRepository.findAll().stream()
+                .filter(r -> {
+                    Integer recipeSeason = r.getSeason();
+                    if (recipeSeason == null) {
+                        return false;
+                    }
+                    return recipeSeason == season;
+                })
+                .map(recipeMapper::toDTO)
+                .toList();
+    }
+
+
+    @Override
     public void deleteRecipe(String id) {
         if (!recipeRepository.existsById(id)) {
             throw new RecipeNotFoundException("No se puede eliminar. No existe la receta con id: " + id);

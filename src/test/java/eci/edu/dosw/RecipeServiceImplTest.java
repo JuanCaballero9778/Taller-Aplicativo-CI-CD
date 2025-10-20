@@ -113,6 +113,88 @@ class RecipeServiceImplTest {
         assertNull(result.getSeason());
     }
 
+    @Test
+    void testShouldHandleNullSeasonInRecipesBySeason() {
+        Recipe recipeWithNullSeason = new Recipe();
+        recipeWithNullSeason.setId("3");
+        recipeWithNullSeason.setName("Postre sin temporada");
+        recipeWithNullSeason.setSeason(null);
+        recipeWithNullSeason.setTypeOfChef(TypeChef.CONTESTAND);
+
+        Recipe recipeWithSeason = new Recipe();
+        recipeWithSeason.setId("4");
+        recipeWithSeason.setName("Sopa de Tomate");
+        recipeWithSeason.setSeason(2);
+        recipeWithSeason.setTypeOfChef(TypeChef.CONTESTAND);
+
+        RecipeDTO recipeDTOWithSeason = new RecipeDTO();
+        recipeDTOWithSeason.setId("4");
+        recipeDTOWithSeason.setName("Sopa de Tomate");
+        recipeDTOWithSeason.setSeason(2);
+        recipeDTOWithSeason.setTypeOfChef(TypeChef.CONTESTAND);
+
+        when(recipeRepository.findAll()).thenReturn(Arrays.asList(recipeWithNullSeason, recipeWithSeason));
+        when(recipeMapper.toDTO(recipeWithSeason)).thenReturn(recipeDTOWithSeason);
+
+        List<RecipeDTO> result = recipeService.getRecipesBySeason(2);
+
+        assertEquals(1, result.size());
+        assertEquals("Sopa de Tomate", result.get(0).getName());
+        assertEquals(2, result.get(0).getSeason());
+    }
+
+
+
+    @Test
+    void testShouldSearchRecipesByName() {
+        Recipe recipe2 = new Recipe();
+        recipe2.setId("2");
+        recipe2.setName("Sopa de Tomate");
+        recipe2.setSeason(3);
+        recipe2.setTypeOfChef(TypeChef.CONTESTAND);
+
+        RecipeDTO recipeDTO2 = new RecipeDTO();
+        recipeDTO2.setId("2");
+        recipeDTO2.setName("Sopa de Tomate");
+        recipeDTO2.setSeason(3);
+        recipeDTO2.setTypeOfChef(TypeChef.CONTESTAND);
+
+        when(recipeRepository.findAll()).thenReturn(Arrays.asList(recipeEntity, recipe2));
+        when(recipeMapper.toDTO(recipeEntity)).thenReturn(recipeDTO);
+        when(recipeMapper.toDTO(recipe2)).thenReturn(recipeDTO2);
+
+        List<RecipeDTO> result = recipeService.searchRecipesByName("ensalada");
+
+        assertEquals(1, result.size());
+        assertEquals("Ensalada de frutas", result.get(0).getName());
+        verify(recipeRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testShouldGetRecipesBySeason() {
+        Recipe recipe2 = new Recipe();
+        recipe2.setId("2");
+        recipe2.setName("Sopa de Tomate");
+        recipe2.setSeason(2);
+        recipe2.setTypeOfChef(TypeChef.CONTESTAND);
+
+        RecipeDTO recipeDTO2 = new RecipeDTO();
+        recipeDTO2.setId("2");
+        recipeDTO2.setName("Sopa de Tomate");
+        recipeDTO2.setSeason(2);
+        recipeDTO2.setTypeOfChef(TypeChef.CONTESTAND);
+
+        when(recipeRepository.findAll()).thenReturn(Arrays.asList(recipeEntity, recipe2));
+        when(recipeMapper.toDTO(recipeEntity)).thenReturn(recipeDTO);
+        when(recipeMapper.toDTO(recipe2)).thenReturn(recipeDTO2);
+
+        List<RecipeDTO> result = recipeService.getRecipesBySeason(1);
+
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(0).getSeason());
+        assertEquals("Ensalada de frutas", result.get(0).getName());
+    }
+
 
     @Test
     void testShouldGetAllRecipes() {

@@ -63,6 +63,18 @@ public class RecipeController {
         return recipeService.getByTypeOfChef(typeChef);
     }
 
+    @Operation(summary = "Buscar recetas por nombre")
+    @GetMapping("/search")
+    public List<RecipeDTO> searchRecipesByName(@RequestParam String name) {
+        return recipeService.searchRecipesByName(name);
+    }
+
+    @Operation(summary = "Obtener recetas por temporada")
+    @GetMapping("/season/{season}")
+    public List<RecipeDTO> getRecipesBySeason(@PathVariable int season) {
+        return recipeService.getRecipesBySeason(season);
+    }
+
     @Operation(summary = "Actualizar receta")
     @PutMapping("/{id}")
     public RecipeDTO updateRecipe(@PathVariable String id, @RequestBody RecipeDTO recipeDTO) {
