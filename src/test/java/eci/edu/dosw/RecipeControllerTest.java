@@ -131,6 +131,17 @@ class RecipeControllerTest {
     }
 
     @Test
+    void testShouldGetRecipesBySeason() {
+        when(recipeService.getRecipesBySeason(1)).thenReturn(Arrays.asList(viewerRecipe, chefRecipe));
+
+        List<RecipeDTO> recipes = recipeController.getRecipesBySeason(1);
+
+        assertEquals(2, recipes.size());
+        assertEquals(1, recipes.get(0).getSeason());
+        assertEquals("Ensalada de frutas", recipes.get(0).getName());
+    }
+
+    @Test
     void testShoudlUpdateRecipeDescription() {
         when(recipeService.getById("1")).thenReturn(viewerRecipe);
         when(recipeService.updateRecipe(eq("1"), any())).thenReturn(viewerRecipe);
