@@ -1,0 +1,32 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Compilar el proyecto con Maven
+        run: mvn -B clean compile
+
+      - name: Ejecutar pruebas unitarias
+        run: mvn test
+
+      - name: Publicar reporte de cobertura (opcional)
+        if: success()
+        run: |
+          echo "Pruebas ejecutadas correctamente "
