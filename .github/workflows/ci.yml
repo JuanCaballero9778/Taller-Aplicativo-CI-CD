@@ -29,7 +29,7 @@ jobs:
       - name: Ejecutar pruebas unitarias
         run: mvn test
 
-      - name: Publicar reporte de cobertura (opcional)
+      - name: Publicar reporte de cobertura
         if: success()
         run: |
           echo "Pruebas ejecutadas correctamente "
